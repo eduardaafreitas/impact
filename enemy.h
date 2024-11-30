@@ -2,8 +2,7 @@
 #define __ENEMY__
 
 #include "headers.h"
-#include "game.h"
-#include "sprites.h"
+#include "player.h"
 
 #define ENEMY1_PATH "resources/enemy/enemy1.png"
 

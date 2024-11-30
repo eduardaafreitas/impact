@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "screen.h": "c",
-        "player.h": "c"
+        "player.h": "c",
+        "enemy.h": "c"
     }
 }

@@ -1,6 +1,8 @@
-#include "headers.h"
-#include "enemy.h"
 #include "sprites.h"
+#include "screen.h"
+#include "game.h"
+#include "enemy.h"
+
 
 
 

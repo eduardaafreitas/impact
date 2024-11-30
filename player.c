@@ -1,7 +1,8 @@
-#include "headers.h"																										
-#include "screen.h"
+																										
+
 #include "player.h"
 #include "sprites.h"
+#include "screen.h"
 #include "game.h"
 
 player_ship *init_player(ALLEGRO_BITMAP* sheet){

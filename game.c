@@ -1,8 +1,7 @@
 
-#include "headers.h"																											
-#include "screen.h"
-#include "player.h"
+
 #include "game.h"
+#include "enemy.h"
 
 ALLEGRO_TIMER* timer;
 ALLEGRO_EVENT event;
@@ -12,9 +11,11 @@ ALLEGRO_FONT* font;
 ALLEGRO_BITMAP* background;
 ALLEGRO_BITMAP* background2;
 ALLEGRO_BITMAP* sheet_player;
+ALLEGRO_BITMAP* sheet_enemy1;
 
 unsigned char key[ALLEGRO_KEY_MAX];
 player_ship *player;
+enemy *enemy1;
 int background_x = 0;  // Posição horizontal do fundo
 const int BACKGROUND_SPEED = 2;  // Velocidade do fundo
 //-------------------------------------------------------------
@@ -54,7 +55,11 @@ void inicializando(){
     sheet_player = al_load_bitmap(PATH_PLAYER);
     inicia_allegro(sheet_player, "spritesheetPlayer"); 
 
+    sheet_enemy1 = al_load_bitmap(ENEMY1_PATH);
+    inicia_allegro(sheet_enemy1, "spritesheetEnemy");
+
     player = init_player(sheet_player);
+    enemy1 = init_enemy(sheet_enemy1);
 
 	al_register_event_source(queue, al_get_display_event_source(display));
 	al_register_event_source(queue, al_get_timer_event_source(timer));
