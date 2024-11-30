@@ -155,7 +155,7 @@ void entry_identifyer(unsigned char *key, player_ship *player){
         player->atual_pose = front; // Muda para "frente"
     
     } else if (key[ALLEGRO_KEY_SPACE]){
-        shoot(player);
+        shoot_player(player);
     }
 
 }

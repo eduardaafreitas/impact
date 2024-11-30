@@ -2,9 +2,9 @@ CC = gcc
 EXEC = impact
 MAIN = main.c 
 ALLEGRO = $$(pkg-config --libs allegro-5 allegro_font-5 allegro_ttf-5 allegro_primitives-5 allegro_audio-5 allegro_acodec-5 allegro_image-5 --libs --cflags)
-INCLUDE = game.c screen.c player.c sprites.c enemy.c
+INCLUDE = game.c screen.c player.c sprites.c enemy.c bullet.c
 CFLAG = Wall
-OBJS = main.o game.o screen.o player.o sprites.o enemy.o
+OBJS = main.o game.o screen.o player.o sprites.o enemy.o bullet.o
 
 all: hello
 
@@ -17,6 +17,7 @@ screen.o: screen.c screen.h
 player.o: player.c player.h
 sprites.o: sprites.c sprites.h
 enemy.o: enemy.c enemy.h
+bullet.o: bullet.c bullet.h
 
 clean:
 	-rm -f *~ *.o

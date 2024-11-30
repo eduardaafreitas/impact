@@ -1,5 +1,3 @@
-																										
-
 #include "player.h"
 #include "sprites.h"
 #include "screen.h"
@@ -56,36 +54,19 @@ void update_player(ALLEGRO_EVENT event, player_ship *player) {
 
         // Dispara os tiros
     if (event.type == ALLEGRO_EVENT_KEY_DOWN && event.keyboard.keycode == ALLEGRO_KEY_SPACE) {
-        shoot(player);
+        shoot_player(player);
     }
 
     // Atualiza os tiros
-    update_bullets(player);
+    update_bullets_player(player);
 
 }
 
 void draw_player(player_ship *player){
     al_draw_bitmap(player->sprites_player[player->atual_pose], player->pos_x, player->pos_y, 0);
-    draw_bullets(player);
+    draw_bullets_player(player);
 }
 
-bullets *alloc_bullets(int max_bullets) {
-    bullets *bullet = malloc(max_bullets * sizeof(bullets));
-    if (bullet == NULL) {
-        printf("Erro ao alocar memória para as balas\n");
-        exit(1);
-    }
-
-    // Inicializa as balas
-    for (int i = 0; i < max_bullets; i++) {
-        bullet[i].active = false;
-        bullet[i].pos_x = 0.0;
-        bullet[i].pos_y = 0.0;
-        bullet[i].speed = 0.0;
-    }
-
-    return bullet;
-}
 void free_player(player_ship *player) {
     if (player != NULL) {
         if (player->bullet != NULL) {
@@ -96,7 +77,7 @@ void free_player(player_ship *player) {
         player = NULL;
     }
 }
-void shoot(player_ship *player){
+void shoot_player(player_ship *player){
     for (int i = 0; i < MAX_BULLETS; i++) {
         if (!player->bullet[i].active) {  // Procura por um tiro inativo
             player->bullet[i].pos_x = player->pos_x + 20; // Posição inicial
@@ -108,7 +89,7 @@ void shoot(player_ship *player){
     }
 }
 
-void update_bullets(player_ship *player) {
+void update_bullets_player(player_ship *player) {
     for (int i = 0; i < MAX_BULLETS; i++) {
         if (player->bullet[i].active) {
             player->bullet[i].pos_x += player->bullet[i].speed;  // Move o tiro para a direita
@@ -121,7 +102,7 @@ void update_bullets(player_ship *player) {
     }
 }
 
-void draw_bullets(player_ship *player) {
+void draw_bullets_player(player_ship *player) {
     for (int i = 0; i < MAX_BULLETS; i++) {
         if (player->bullet[i].active) {
             // Desenha o tiro como um retângulo (pode mudar para círculo ou outro formato)
