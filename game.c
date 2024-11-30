@@ -112,6 +112,8 @@ void state_playing() {
 
                 update_player(event, player);
                 draw_player(player);
+                update_enemy(enemy1);
+                draw_enemy(enemy1);
                 al_flip_display();
                 break;
             

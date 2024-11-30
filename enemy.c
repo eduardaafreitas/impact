@@ -3,9 +3,6 @@
 #include "game.h"
 #include "enemy.h"
 
-
-
-
 enemy *init_enemy(ALLEGRO_BITMAP* sheet){
 
     enemy *enemy_active;
