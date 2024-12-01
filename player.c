@@ -2,6 +2,7 @@
 #include "sprites.h"
 #include "screen.h"
 #include "game.h"
+#include "collision.h"
 
 player_ship *init_player(ALLEGRO_BITMAP* sheet){
     
@@ -24,7 +25,7 @@ player_ship *init_player(ALLEGRO_BITMAP* sheet){
     return player;
 }
 
-void update_player(ALLEGRO_EVENT event, player_ship *player) {
+void update_player(ALLEGRO_EVENT event, player_ship *player, enemy *enemy_active) {
     // Movimenta a nave enquanto a tecla está pressionada
     if (key[ALLEGRO_KEY_UP]) {
         player->pos_y -= player->speed;
@@ -58,7 +59,7 @@ void update_player(ALLEGRO_EVENT event, player_ship *player) {
     }
 
     // Atualiza os tiros
-    update_bullets_player(player);
+    update_bullets_player(player, enemy_active);
 
 }
 
@@ -89,18 +90,39 @@ void shoot_player(player_ship *player){
     }
 }
 
-void update_bullets_player(player_ship *player) {
+void update_bullets_player(player_ship *player, enemy *enemy_active) {
     for (int i = 0; i < MAX_BULLETS; i++) {
         if (player->bullet[i].active) {
-            player->bullet[i].pos_x += player->bullet[i].speed;  // Move o tiro para a direita
+            // Move o tiro
+            player->bullet[i].pos_x += player->bullet[i].speed;
 
-            // Desativa o tiro se ele sair da tela
+            // Desativa o tiro se sair da tela
             if (player->bullet[i].pos_x > SIZE_X) {
                 player->bullet[i].active = false;
+                continue;
+            }
+
+            // Verifica colisão com o inimigo
+            float bullet_width = 10;  // Largura do tiro
+            float bullet_height = 5;  // Altura do tiro
+            float enemy_width = al_get_bitmap_width(enemy_active->sprite);
+            float enemy_height = al_get_bitmap_height(enemy_active->sprite);
+
+            if (collision_detect(player->bullet[i].pos_x, player->bullet[i].pos_y, bullet_width, bullet_height,
+                                enemy_active->pos_x, enemy_active->pos_y, enemy_width, enemy_height)) {
+                player->bullet[i].active = false; // Desativa o tiro
+                enemy_active->health_points--;   // Diminui a vida do inimigo
+
+                // Se o inimigo for derrotado, reposicione-o ou aplique lógica adicional
+                if (enemy_active->health_points <= 0) {
+                    spawn_enemy(enemy_active);  // Reposiciona o inimigo
+                    player->score += 10;        // Incrementa a pontuação do jogador
+                }
             }
         }
     }
 }
+
 
 void draw_bullets_player(player_ship *player) {
     for (int i = 0; i < MAX_BULLETS; i++) {

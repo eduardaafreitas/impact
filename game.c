@@ -109,10 +109,9 @@ void state_playing() {
                 al_clear_to_color(al_map_rgb(0, 0, 0));
                 animate_background(background2, &background_x, BACKGROUND_SPEED);
                 entry_identifyer(key, player);
-
-                update_player(event, player);
-                draw_player(player);
                 update_enemy(enemy1);
+                update_player(event, player, enemy1);
+                draw_player(player);
                 draw_enemy(enemy1);
                 al_flip_display();
                 break;

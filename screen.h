@@ -7,6 +7,6 @@
 #define SIZE_Y 720
 
 void animate_background(ALLEGRO_BITMAP* background, int* background_x, int speed);
-
+void show_hp();
 
 #endif
