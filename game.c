@@ -7,7 +7,9 @@ ALLEGRO_TIMER* timer;
 ALLEGRO_EVENT event;
 ALLEGRO_EVENT_QUEUE* queue;
 ALLEGRO_DISPLAY* display;
-ALLEGRO_FONT* font;
+ALLEGRO_FONT* font_title;
+ALLEGRO_FONT* font_text;
+ALLEGRO_FONT* font_text2;
 ALLEGRO_BITMAP* background;
 ALLEGRO_BITMAP* background2;
 ALLEGRO_BITMAP* sheet_player;
@@ -33,31 +35,34 @@ void inicializando(){
     inicia_allegro(al_init_font_addon(), "font");
     inicia_allegro(al_init_ttf_addon(), "ttf");
 
+    //BASICS:
     timer = al_create_timer(1.0 / 60.0);
     inicia_allegro(timer, "timer");
-
     queue = al_create_event_queue();
     inicia_allegro(queue, "queue");
-
     display = al_create_display(SIZE_X, SIZE_Y);
     inicia_allegro(display, "display");
 
-    // font = al_load_font("resources/fonts/fightkid.ttf", 25, 0);
-    // inicia_allegro(font, "font");
+    //FONTES:
+    font_title = al_load_font(FONT_TITLE_PATH, 25, 0);
+    inicia_allegro(font_title, "fontTitle");
+    font_text = al_load_font(FONT_TEXT_PATH, 25, 0);
+    inicia_allegro(font_text, "fontTitle");
+    font_text2 = al_load_font(FONT_TEXT2_PATH, 25, 0);
+    inicia_allegro(font_text2, "fontTitle2");
 
+    //BACKGROUNDS:
     background = al_load_bitmap(PATH_BG1);
     inicia_allegro(background, "background");
-
     background2 = al_load_bitmap(PATH_BG2);
     inicia_allegro(background2, "background2");
 
+    //SPRITES PLAYER AND ENEMIES:
     inicia_allegro(al_init_image_addon(), "image addon");
     sheet_player = al_load_bitmap(PATH_PLAYER);
     inicia_allegro(sheet_player, "spritesheetPlayer"); 
-
     sheet_enemy1 = al_load_bitmap(ENEMY1_PATH);
     inicia_allegro(sheet_enemy1, "spritesheetEnemy");
-
     player = init_player(sheet_player);
     enemy1 = init_enemy(sheet_enemy1);
 
@@ -91,7 +96,6 @@ void state_start() {
         }
     }
 }
-
 
 void state_playing() {
     background_x = 0;

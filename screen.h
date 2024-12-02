@@ -5,8 +5,12 @@
 
 #define SIZE_X 960
 #define SIZE_Y 720
+#define FONT_TITLE_PATH "resources/fonts/Starjedi.ttf"
+#define FONT_TEXT_PATH "resources/fonts/Segoe.ttf"
+#define FONT_TEXT2_PATH "resources/fonts/SegoeBold.ttf"
 
 void animate_background(ALLEGRO_BITMAP* background, int* background_x, int speed);
+void initial_animation();
 void show_hp();
 
 #endif
