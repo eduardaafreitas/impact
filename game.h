@@ -22,6 +22,8 @@ void state_serving();
 
 void state_playing();
 void state_end_game();
+void state_pause();
+
 
 
 void entry_identifyer(unsigned char *key, player_ship *player);

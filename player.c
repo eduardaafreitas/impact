@@ -21,24 +21,21 @@ player_ship *init_player(ALLEGRO_BITMAP* sheet){
     sprites_player(sheet, player);
     player->atual_pose = standard;
     player->bullet = alloc_bullets(MAX_BULLETS);
+    player->time_since_last_shot = 0.0;
+    player->shot_cooldown = 0.25;
 
     return player;
 }
 
 void update_player(ALLEGRO_EVENT event, player_ship *player, enemy *enemy_active) {
+    // Atualiza o tempo desde o último disparo
+    player->time_since_last_shot += 1.0 / 60.0; // Assumindo 60 FPS
+
     // Movimenta a nave enquanto a tecla está pressionada
-    if (key[ALLEGRO_KEY_UP]) {
-        player->pos_y -= player->speed;
-    }
-    if (key[ALLEGRO_KEY_DOWN]) {
-        player->pos_y += player->speed;
-    }
-    if (key[ALLEGRO_KEY_LEFT]) {
-        player->pos_x -= player->speed;
-    }
-    if (key[ALLEGRO_KEY_RIGHT]) {
-        player->pos_x += player->speed;
-    }
+    if (key[ALLEGRO_KEY_UP]) player->pos_y -= player->speed;
+    if (key[ALLEGRO_KEY_DOWN]) player->pos_y += player->speed;
+    if (key[ALLEGRO_KEY_LEFT]) player->pos_x -= player->speed;
+    if (key[ALLEGRO_KEY_RIGHT]) player->pos_x += player->speed;
 
     // Limitar o jogador dentro da tela
     if (player->pos_y < 0) player->pos_y = 0;
@@ -48,20 +45,16 @@ void update_player(ALLEGRO_EVENT event, player_ship *player, enemy *enemy_active
     if (player->pos_x > SIZE_X - al_get_bitmap_width(player->sprites_player[standard])) 
         player->pos_x = SIZE_X - al_get_bitmap_width(player->sprites_player[standard]);
 
-    // Processa evento de tecla solta para voltar à pose padrão
-    if (event.type == ALLEGRO_EVENT_KEY_UP) {
-        key[event.keyboard.keycode] = 0;  // Marca a tecla como não pressionada
-    }
-
-        // Dispara os tiros
-    if (event.type == ALLEGRO_EVENT_KEY_DOWN && event.keyboard.keycode == ALLEGRO_KEY_SPACE) {
+    // Dispara tiros contínuos
+    if (key[ALLEGRO_KEY_SPACE] && player->time_since_last_shot >= player->shot_cooldown) {
         shoot_player(player);
+        player->time_since_last_shot = 0; // Reseta o cooldown após disparar
     }
 
     // Atualiza os tiros
     update_bullets_player(player, enemy_active);
-
 }
+
 
 void draw_player(player_ship *player){
     al_draw_bitmap(player->sprites_player[player->atual_pose], player->pos_x, player->pos_y, 0);

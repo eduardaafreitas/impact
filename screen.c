@@ -9,3 +9,7 @@ void animate_background(ALLEGRO_BITMAP* background, int* background_x, int speed
     al_draw_bitmap(background, *background_x, 0, 0);
     al_draw_bitmap(background, *background_x + al_get_bitmap_width(background), 0, 0);
 }
+
+void initial_animation(){
+    
+}

@@ -134,6 +134,34 @@ void state_playing() {
     }
 }
 
+void state_pause() {
+
+    //AJEITAR TELA DE PAUSA
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+    al_draw_text(font_title, al_map_rgb(255, 255, 255), SIZE_X / 2, SIZE_Y / 2 - 30,
+                 ALLEGRO_ALIGN_CENTER, "Jogo Pausado");
+    al_draw_text(font_text, al_map_rgb(255, 255, 255), SIZE_X / 2, SIZE_Y / 2 + 10,
+                 ALLEGRO_ALIGN_CENTER, "Pressione ENTER para continuar");
+    al_draw_text(font_text, al_map_rgb(255, 255, 255), SIZE_X / 2, SIZE_Y / 2 + 40,
+                 ALLEGRO_ALIGN_CENTER, "Pressione ESC para sair");
+    al_flip_display();
+
+    while (state == playing) {
+        al_wait_for_event(queue, &event);
+
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            state = end_game;
+            break;
+        } else if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+            if (event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+                return;  // Sai do estado de pausa e volta ao jogo
+            } else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+                state = end_game;  // Encerrar o jogo
+                break;
+            }
+        }
+    }
+}
 
 void state_end_game() {
     // Libera todos os recursos alocados
@@ -157,8 +185,8 @@ void entry_identifyer(unsigned char *key, player_ship *player){
     } else if (key[ALLEGRO_KEY_RIGHT]) {
         player->atual_pose = front; // Muda para "frente"
     
-    } else if (key[ALLEGRO_KEY_SPACE]){
-        shoot_player(player);
+    } else if (key[ALLEGRO_KEY_ESCAPE]){
+        state_pause();
     }
 
 }

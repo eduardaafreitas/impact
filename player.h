@@ -18,6 +18,8 @@ struct player_ship{
     int score;
     int health_points;
     bullets *bullet;
+    float time_since_last_shot;
+    float shot_cooldown;
 };
 typedef struct player_ship player_ship;
 
