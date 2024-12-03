@@ -20,6 +20,7 @@ struct player_ship{
     bullets *bullet;
     float time_since_last_shot;
     float shot_cooldown;
+    int enemies_defeated;
 };
 typedef struct player_ship player_ship;
 

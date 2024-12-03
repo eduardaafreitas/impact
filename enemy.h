@@ -6,6 +6,14 @@
 
 #define ENEMY1_PATH "resources/enemy/enemy1.png"
 
+//Tipos de inimigos:
+// 1: apenas voa
+// 2: atira sem mira
+// 3: atira mirando
+// 4: atira mais vezes
+// 5: boss 1
+// 6: boss 2
+
 struct enemy{
     ALLEGRO_BITMAP* sprite;
     int shot_flag, special_flag;
