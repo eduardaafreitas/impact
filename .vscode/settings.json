@@ -2,6 +2,7 @@
     "files.associations": {
         "screen.h": "c",
         "player.h": "c",
-        "enemy.h": "c"
+        "enemy.h": "c",
+        "headers.h": "c"
     }
 }

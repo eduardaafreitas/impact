@@ -15,8 +15,22 @@ void sprites_player (ALLEGRO_BITMAP *sheet, player_ship *player){
     }
 }
 
-void sprites_enemy(ALLEGRO_BITMAP *sheet, enemy *enemy_active){
-    enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 80, 80);
+void sprites_enemy(ALLEGRO_BITMAP *sheet, enemy *enemy_active, int type) {
+    switch (type) {
+        case 1:
+            enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 80, 80);
+            break;
+        case 2:
+            enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 103, 70);
+            break;
+        case 3:
+            enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 80, 70);
+            break;
+        case 4:
+            enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 95, 70);
+            break;
+    }
+
     if(enemy_active->sprite == NULL){
         printf("Erro ao criar sub_bitmap para o sprite enemy\n");
         exit(1);

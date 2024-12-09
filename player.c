@@ -118,6 +118,44 @@ void update_bullets_player(player_ship *player, enemy *enemy_active) {
     }
 }
 
+bool check_collision(player_ship *player, enemy *e) {
+    // Verifica se o retângulo do player colide com o retângulo do inimigo
+    return !(player->pos_x + 100 < e->pos_x || 
+             player->pos_x > e->pos_x + 80 || 
+             player->pos_y + 100 < e->pos_y || 
+             player->pos_y > e->pos_y + 80);
+}
+
+
+void check_player_collision(player_ship *player, enemy *enemy_active) {
+    if (enemy_active != NULL) {
+        // Verifica colisão com os projéteis do inimigo
+        bullets *enemy_bullets = enemy_active->bullet;
+
+        for (int j = 0; j < MAX_BULLETS; j++) {
+            if (enemy_bullets[j].active) {
+                float bullet_width = 5;  // Ajuste de acordo com o tamanho do projétil
+                float bullet_height = 5; // Ajuste de acordo com o tamanho do projétil
+                float player_width = al_get_bitmap_width(player->sprites_player[player->atual_pose]);
+                float player_height = al_get_bitmap_height(player->sprites_player[player->atual_pose]);
+
+                // Verifica colisão entre o projétil e o jogador
+                if (collision_detect(enemy_bullets[j].pos_x, enemy_bullets[j].pos_y, bullet_width, bullet_height,
+                                     player->pos_x, player->pos_y, player_width, player_height)) {
+                    // Jogador foi atingido
+                    player->health_points--;     // Reduzir HP do jogador
+                    enemy_bullets[j].active = 0; // Desativar projétil
+
+                    if (player->health_points <= 0) {
+                        printf("Game Over!\n");
+                        // Insira lógica adicional para terminar o jogo
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 void draw_bullets_player(player_ship *player) {
     for (int i = 0; i < MAX_BULLETS; i++) {

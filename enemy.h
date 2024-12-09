@@ -5,6 +5,9 @@
 #include "player.h"
 
 #define ENEMY1_PATH "resources/enemy/enemy1.png"
+#define ENEMY2_PATH "resources/enemy/enemy2.png"
+#define ENEMY3_PATH "resources/enemy/enemy3.png"
+#define ENEMY4_PATH "resources/enemy/enemy4.png"
 
 //Tipos de inimigos:
 // 1: apenas voa
@@ -26,9 +29,12 @@ struct enemy{
 };
 typedef struct enemy enemy;
 
-enemy *init_enemy(ALLEGRO_BITMAP* sheet);
+enemy *init_enemy(ALLEGRO_BITMAP* sheet, int type);
 void spawn_enemy(enemy* enemy_active);
 void update_enemy(enemy* enemy_active);
 void draw_enemy(enemy *enemy_active);
+void shoot_enemy(enemy *enemy_active);
+void draw_bullets_enemy(enemy* enemy_active, bullets *bullet);
+void update_bullets_enemy(bullets *bullet);
 
 #endif

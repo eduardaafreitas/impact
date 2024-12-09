@@ -7,5 +7,5 @@
 #include "enemy.h"
 
 void sprites_player (ALLEGRO_BITMAP *sprites, player_ship *player);
-void sprites_enemy(ALLEGRO_BITMAP *sheet, enemy *enemy_active);
+void sprites_enemy(ALLEGRO_BITMAP *sheet, enemy *enemy_active, int type);
 #endif
