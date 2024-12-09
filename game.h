@@ -14,7 +14,7 @@ extern float elapsed_time;
 
 extern unsigned char key[ALLEGRO_KEY_MAX];
 
-enum game_state {start, serving, playing, end_fase, end_game};
+enum game_state {start, serving, playing, fase2, end_fase, end_game};
 extern enum game_state state;
 
 void inicia_allegro(bool teste, char *descricao);

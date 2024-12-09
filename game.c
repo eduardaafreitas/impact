@@ -149,10 +149,49 @@ void state_playing() {
                     manage_enemy_wave(enemy4, player, font_text);
                 }
 
-
                 al_flip_display();
                 // Atualiza a onda
                 update_wave_level(player);
+                break;
+
+            case ALLEGRO_EVENT_KEY_DOWN:
+                key[event.keyboard.keycode] = 1;
+                break;
+
+            case ALLEGRO_EVENT_KEY_UP:
+                key[event.keyboard.keycode] = 0;
+                break;
+        }
+    }
+}
+
+void state_fase2() {
+    background_x = 0;
+    memset(key, 0, sizeof(key));
+
+    while (state == fase2) {
+        al_wait_for_event(queue, &event);
+
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                state = end_game;
+                break;
+
+            case ALLEGRO_EVENT_TIMER:
+                al_clear_to_color(al_map_rgb(0, 0, 0));
+                animate_background(background2, &background_x, BACKGROUND_SPEED);
+
+                entry_identifyer(key, player);
+
+                // Aqui, você pode usar inimigos ou lógica diferentes para a Fase 2
+                if (wave_level < 13) {
+                    manage_enemy_wave(enemy3, player, font_text);
+                } else {
+                    manage_enemy_wave(enemy4, player, font_text);
+                }
+
+                al_flip_display();
+                update_wave_level(player); // Continua atualizando o nível
                 break;
 
             case ALLEGRO_EVENT_KEY_DOWN:
@@ -170,7 +209,7 @@ void state_playing() {
 void state_pause() {
 
     //AJEITAR TELA DE PAUSA
-    al_clear_to_color(al_map_rgb(0, 0, 0));
+    //al_clear_to_color(al_map_rgb(0, 0, 0));
     al_draw_text(font_title, al_map_rgb(255, 255, 255), SIZE_X / 2, SIZE_Y / 2 - 30,
                  ALLEGRO_ALIGN_CENTER, "Jogo Pausado");
     al_draw_text(font_text, al_map_rgb(255, 255, 255), SIZE_X / 2, SIZE_Y / 2 + 10,
@@ -219,17 +258,16 @@ void state_end_game() {
 
 
 void update_wave_level(player_ship* player) {
-    // Incrementa o nível da onda a cada 30 segundos
-    // if ((int)elapsed_time % 30 == 0) {
-    //     wave_level++;
-    // }
-
-    // Avança a onda após derrotar 10 inimigos
     if (player->enemies_defeated % 5 == 0 && player->enemies_defeated > 0) {
         wave_level++;
         player->enemies_defeated = 0; // Reinicia contagem
+
+        if (wave_level > 10) { // Supondo que a mudança ocorre após o nível 10
+            state = fase2;
+        }
     }
 }
+
 
 void entry_identifyer(unsigned char *key, player_ship *player){
     if (key[ALLEGRO_KEY_UP]) {
@@ -255,7 +293,7 @@ void manage_enemy_wave(enemy* enemy_wave, player_ship* player, ALLEGRO_FONT* fon
         update_bullets_enemy(enemy_wave->bullet);
         draw_bullets_enemy(enemy_wave, enemy_wave->bullet);
         if (check_collision(player, enemy_wave->bullet)) {
-            player->health_points -= 10;
+            player->health_points --;
             enemy_wave->bullet->active = false;  // Desativa a bala após o impacto
         }
     }

@@ -1,5 +1,3 @@
-
-																											
 #include "game.h"
 
 // Definição da variável global
@@ -16,6 +14,9 @@ int main(){
                 break;
             case playing:
                 state_playing();
+                break;
+            case fase2:
+                state_fase2();
                 break;
             case end_game:
                 state_end_game();

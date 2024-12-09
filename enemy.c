@@ -3,6 +3,7 @@
 #include "game.h"
 #include "enemy.h"
 
+
 enemy *init_enemy(ALLEGRO_BITMAP* sheet, int type){
 
     enemy *enemy_active;
@@ -51,20 +52,23 @@ void update_enemy(enemy* enemy_active) {
     // Move o inimigo
     enemy_active->pos_x -= enemy_active->speed;
 
-    // Verifica se o inimigo deve atirar
-    static float shoot_timer = 0;
-    shoot_timer += 1.0 / 60.0; // Incrementa a cada frame (ajuste para o tempo real do jogo)
+    // Verifica se o inimigo é do tipo que atira (2 ou 4)
+    if (enemy_active->type == 1 || enemy_active->type == 2) {
+        static float shoot_timer = 0;
+        shoot_timer += 1.0 / 60.0; // Incrementa o temporizador baseado em 60 FPS
 
-    if (shoot_timer >= 1.0) { // Tiros a cada 1 segundo, ajuste conforme necessário
-        shoot_enemy(enemy_active);
-        shoot_timer = 0; // Reseta o temporizador
+        if (shoot_timer >= 1.0) { // Tiros a cada 1 segundo
+            shoot_enemy(enemy_active); // Função para criar um tiro vindo do inimigo
+            shoot_timer = 0; // Reseta o temporizador
+        }
     }
 
-    // Se o inimigo sair da tela, reposicionar
+    // Reposiciona o inimigo caso saia da tela
     if (enemy_active->pos_x + al_get_bitmap_width(enemy_active->sprite) < 0) {
-        spawn_enemy(enemy_active);
+        spawn_enemy(enemy_active); // Reposiciona o inimigo
     }
 }
+
 
 
 void draw_enemy(enemy *enemy_active){
