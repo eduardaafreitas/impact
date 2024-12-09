@@ -118,13 +118,19 @@ void update_bullets_player(player_ship *player, enemy *enemy_active) {
     }
 }
 
-bool check_collision(player_ship *player, enemy *e) {
-    // Verifica se o retângulo do player colide com o retângulo do inimigo
-    return !(player->pos_x + 100 < e->pos_x || 
-             player->pos_x > e->pos_x + 80 || 
-             player->pos_y + 100 < e->pos_y || 
-             player->pos_y > e->pos_y + 80);
+bool check_collision(player_ship *player, bullets *bullet) {
+    int player_width = 100;  // Largura do player
+    int player_height = 100; // Altura do player
+    int bullet_width = 10;   // Largura da bala do inimigo
+    int bullet_height = 10;  // Altura da bala do inimigo
+
+    // Verifica se o retângulo da bala do inimigo colide com o retângulo do player
+    return !(player->pos_x + player_width < bullet->pos_x || 
+             player->pos_x > bullet->pos_x + bullet_width || 
+             player->pos_y + player_height < bullet->pos_y || 
+             player->pos_y > bullet->pos_y + bullet_height);
 }
+
 
 
 void check_player_collision(player_ship *player, enemy *enemy_active) {

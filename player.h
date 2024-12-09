@@ -32,7 +32,7 @@ void free_player(player_ship *player);
 void shoot_player(player_ship *player);
 void update_bullets_player(player_ship *player, enemy *enemy_active);
 void draw_bullets_player(player_ship *player);
-bool check_collision(player_ship *player, enemy *e);
+bool check_collision(player_ship *player, bullets *bullet);
 void check_player_collision(player_ship *player, enemy *enemy_active);
 
 #endif

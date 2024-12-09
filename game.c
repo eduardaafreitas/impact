@@ -134,7 +134,7 @@ void state_playing() {
 
             case ALLEGRO_EVENT_TIMER:
                 al_clear_to_color(al_map_rgb(0, 0, 0));
-                animate_background(background2, &background_x, BACKGROUND_SPEED);
+                animate_background(background3, &background_x, BACKGROUND_SPEED);
                 
                 entry_identifyer(key, player);
 
@@ -249,13 +249,17 @@ void entry_identifyer(unsigned char *key, player_ship *player){
 void manage_enemy_wave(enemy* enemy_wave, player_ship* player, ALLEGRO_FONT* font) {
     update_enemy(enemy_wave);
     draw_enemy(enemy_wave);
-    if (check_collision(player, enemy_wave)) {
-        player->health_points -= 10;
-    }
-    if (enemy_wave->bullet->active == true){
+    
+    // Verificar se o jogador foi atingido por alguma bala dos inimigos
+    if (enemy_wave->bullet->active == true) {
         update_bullets_enemy(enemy_wave->bullet);
         draw_bullets_enemy(enemy_wave, enemy_wave->bullet);
+        if (check_collision(player, enemy_wave->bullet)) {
+            player->health_points -= 10;
+            enemy_wave->bullet->active = false;  // Desativa a bala após o impacto
+        }
     }
+
     update_player(event, player, enemy_wave);
     draw_player(player);
     draw_hud(player, font);
