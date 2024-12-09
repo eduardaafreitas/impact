@@ -75,19 +75,19 @@ void free_player(player_ship *player) {
 void shoot_player(player_ship *player){
     for (int i = 0; i < MAX_BULLETS; i++) {
         if (!player->bullet[i].active) {  // Procura por um tiro inativo
-            player->bullet[i].pos_x = player->pos_x + 20; // Posição inicial
-            player->bullet[i].pos_y = player->pos_y + 10; // Ajustado para o centro
-            player->bullet[i].speed = 8.0;            // Velocidade do tiro
-            player->bullet[i].active = true;          // Marca o tiro como ativo
+            // Ajuste de posição para o meio da nave
+            player->bullet[i].pos_x = player->pos_x + (al_get_bitmap_width(player->sprites_player[standard]) / 2) - 5; // Meio da nave
+            player->bullet[i].pos_y = player->pos_y + (al_get_bitmap_height(player->sprites_player[standard]) / 2) - 2; // Meio da altura da nave
+            player->bullet[i].speed = 8.0; // Velocidade do tiro
+            player->bullet[i].active = true; // Marca o tiro como ativo
             break;
         }
     }
 }
-
 void update_bullets_player(player_ship *player, enemy *enemy_active) {
     for (int i = 0; i < MAX_BULLETS; i++) {
         if (player->bullet[i].active) {
-            // Move o tiro
+            // Move o tiro (desloca apenas no eixo X)
             player->bullet[i].pos_x += player->bullet[i].speed;
 
             // Desativa o tiro se sair da tela
@@ -97,8 +97,8 @@ void update_bullets_player(player_ship *player, enemy *enemy_active) {
             }
 
             // Verifica colisão com o inimigo
-            float bullet_width = 10;  // Largura do tiro
-            float bullet_height = 5;  // Altura do tiro
+            float bullet_width = 5;
+            float bullet_height = 5;
             float enemy_width = al_get_bitmap_width(enemy_active->sprite);
             float enemy_height = al_get_bitmap_height(enemy_active->sprite);
 
@@ -118,11 +118,13 @@ void update_bullets_player(player_ship *player, enemy *enemy_active) {
     }
 }
 
+
+
 bool check_collision(player_ship *player, bullets *bullet) {
-    int player_width = 100;  // Largura do player
-    int player_height = 100; // Altura do player
-    int bullet_width = 10;   // Largura da bala do inimigo
-    int bullet_height = 10;  // Altura da bala do inimigo
+    int player_width = 135; 
+    int player_height = 135;
+    int bullet_width = 5;
+    int bullet_height = 5;  
 
     // Verifica se o retângulo da bala do inimigo colide com o retângulo do player
     return !(player->pos_x + player_width < bullet->pos_x || 
@@ -131,30 +133,24 @@ bool check_collision(player_ship *player, bullets *bullet) {
              player->pos_y > bullet->pos_y + bullet_height);
 }
 
-
-
 void check_player_collision(player_ship *player, enemy *enemy_active) {
     if (enemy_active != NULL) {
-        // Verifica colisão com os projéteis do inimigo
         bullets *enemy_bullets = enemy_active->bullet;
-
         for (int j = 0; j < MAX_BULLETS; j++) {
             if (enemy_bullets[j].active) {
-                float bullet_width = 5;  // Ajuste de acordo com o tamanho do projétil
-                float bullet_height = 5; // Ajuste de acordo com o tamanho do projétil
+                float bullet_width = 5;
+                float bullet_height = 5;
                 float player_width = al_get_bitmap_width(player->sprites_player[player->atual_pose]);
                 float player_height = al_get_bitmap_height(player->sprites_player[player->atual_pose]);
 
                 // Verifica colisão entre o projétil e o jogador
                 if (collision_detect(enemy_bullets[j].pos_x, enemy_bullets[j].pos_y, bullet_width, bullet_height,
                                      player->pos_x, player->pos_y, player_width, player_height)) {
-                    // Jogador foi atingido
-                    player->health_points--;     // Reduzir HP do jogador
-                    enemy_bullets[j].active = 0; // Desativar projétil
+                    player->health_points--;
+                    enemy_bullets[j].active = 0;
 
-                    if (player->health_points <= 0) {
-                        printf("Game Over!\n");
-                        // Insira lógica adicional para terminar o jogo
+                    if (player->health_points == 0) {
+                        state_game_over();
                     }
                 }
             }
@@ -166,11 +162,11 @@ void check_player_collision(player_ship *player, enemy *enemy_active) {
 void draw_bullets_player(player_ship *player) {
     for (int i = 0; i < MAX_BULLETS; i++) {
         if (player->bullet[i].active) {
-            // Desenha o tiro como um retângulo (pode mudar para círculo ou outro formato)
-            al_draw_filled_rectangle(player->bullet[i].pos_x, player->bullet[i].pos_y, 
-                                     player->bullet[i].pos_x + 10, player->bullet[i].pos_y + 5, 
+            float bullet_start_x = player->bullet[i].pos_x;
+            float bullet_start_y = player->bullet[i].pos_y;
+            al_draw_filled_rectangle(bullet_start_x, bullet_start_y - 2, 
+                                     bullet_start_x + 10, bullet_start_y + 3, 
                                      al_map_rgb(255, 255, 0));
         }
     }
 }
-

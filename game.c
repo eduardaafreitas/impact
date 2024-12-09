@@ -16,6 +16,7 @@ ALLEGRO_BITMAP* sheet_enemy1;
 ALLEGRO_BITMAP* sheet_enemy2;
 ALLEGRO_BITMAP* sheet_enemy3;
 ALLEGRO_BITMAP* sheet_enemy4;
+ALLEGRO_BITMAP* sheet_boss1;
 
 int wave_level = 1;          // Começa no nível 1
 float elapsed_time = 0.0;    // Tempo decorrido na fase
@@ -26,8 +27,10 @@ enemy *enemy1;
 enemy *enemy2;
 enemy *enemy3;
 enemy *enemy4;
+enemy *boss1;
 int background_x = 0;  // Posição horizontal do fundo
 const int BACKGROUND_SPEED = 2;  // Velocidade do fundo
+bool restart = false;
 //-------------------------------------------------------------
 void inicia_allegro(bool teste, char *descricao){
     if(teste) 
@@ -80,12 +83,15 @@ void inicializando(){
     inicia_allegro(sheet_enemy3, "spritesheetEnemy3");
     sheet_enemy4 = al_load_bitmap(ENEMY4_PATH);
     inicia_allegro(sheet_enemy4, "spritesheetEnemy4");
+    sheet_boss1 = al_load_bitmap(BOSS1_PATH);
+    inicia_allegro(sheet_boss1, "spritesheetboss1");
   
     player = init_player(sheet_player);
     enemy1 = init_enemy(sheet_enemy1, 1);
     enemy2 = init_enemy(sheet_enemy2, 2);
     enemy3 = init_enemy(sheet_enemy3, 3);
     enemy4 = init_enemy(sheet_enemy4, 4);    
+    boss1 = init_enemy(sheet_boss1, 5);
 
 	al_register_event_source(queue, al_get_display_event_source(display));
 	al_register_event_source(queue, al_get_timer_event_source(timer));
@@ -205,7 +211,6 @@ void state_fase2() {
     }
 }
 
-
 void state_pause() {
 
     //AJEITAR TELA DE PAUSA
@@ -256,18 +261,57 @@ void state_end_game() {
     exit(0);  // Encerra o programa
 }
 
+void state_game_over() {
+    // Variáveis de controle do loop
 
-void update_wave_level(player_ship* player) {
-    if (player->enemies_defeated % 5 == 0 && player->enemies_defeated > 0) {
-        wave_level++;
-        player->enemies_defeated = 0; // Reinicia contagem
+    while (state == game_over) {
+        ALLEGRO_EVENT event;
+        al_wait_for_event(queue, &event);
 
-        if (wave_level > 10) { // Supondo que a mudança ocorre após o nível 10
-            state = fase2;
+        // Lida com eventos
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            state = end_game;
+        } else if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+            if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+                state = end_game;
+            } else if (event.keyboard.keycode == ALLEGRO_KEY_R) {
+                restart = true;
+                state = playing;
+            }
+        } else if (event.type == ALLEGRO_EVENT_TIMER) {
+            // Desenha a tela de Game Over
+            //al_clear_to_color(al_color_name("black"));
+
+            al_draw_text(font_title, al_map_rgb(255, 255, 255),
+                         al_get_display_width(display) / 2, 
+                         al_get_display_height(display) / 3, 
+                         ALLEGRO_ALIGN_CENTER, "GAME OVER");
+            
+            char score_text[50];
+            snprintf(score_text, sizeof(score_text), "Your Score: %d", player->score);
+            al_draw_text(font_text, al_map_rgb(255, 255, 255),
+                         al_get_display_width(display) / 2,
+                         al_get_display_height(display) / 2,
+                         ALLEGRO_ALIGN_CENTER, score_text);
+
+            al_draw_text(font_text, al_map_rgb(255, 255, 255),
+                         al_get_display_width(display) / 2,
+                         (al_get_display_height(display) / 2) + 50,
+                         ALLEGRO_ALIGN_CENTER, "Press ESC to Exit");
+            
+            al_draw_text(font_text, al_map_rgb(255, 255, 255),
+                         al_get_display_width(display) / 2,
+                         (al_get_display_height(display) / 2) + 100,
+                         ALLEGRO_ALIGN_CENTER, "Press R to Restart");
+
+            al_flip_display();
         }
     }
-}
 
+    // Limpa recursos
+    al_destroy_timer(timer);
+    al_destroy_event_queue(queue);
+}
 
 void entry_identifyer(unsigned char *key, player_ship *player){
     if (key[ALLEGRO_KEY_UP]) {
@@ -282,6 +326,17 @@ void entry_identifyer(unsigned char *key, player_ship *player){
         state_pause();
     }
 
+}
+
+void update_wave_level(player_ship* player) {
+    if (player->enemies_defeated == 2 && player->enemies_defeated > 0) {
+        wave_level++;
+        player->enemies_defeated = 0; // Reinicia contagem
+
+        if (wave_level > 10) { // Supondo que a mudança ocorre após o nível 10
+            state = fase2;
+        }
+    }
 }
 
 void manage_enemy_wave(enemy* enemy_wave, player_ship* player, ALLEGRO_FONT* font) {

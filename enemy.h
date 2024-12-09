@@ -8,6 +8,7 @@
 #define ENEMY2_PATH "resources/enemy/enemy2.png"
 #define ENEMY3_PATH "resources/enemy/enemy3.png"
 #define ENEMY4_PATH "resources/enemy/enemy4.png"
+#define BOSS1_PATH "resources/enemy/boss1.png"
 
 //Tipos de inimigos:
 // 1: apenas voa
@@ -19,6 +20,7 @@
 
 struct enemy{
     ALLEGRO_BITMAP* sprite;
+    ALLEGRO_BITMAP* spriteboss1[8];
     int shot_flag, special_flag;
     float pos_x, pos_y;
     float speed;
@@ -31,7 +33,9 @@ typedef struct enemy enemy;
 
 enemy *init_enemy(ALLEGRO_BITMAP* sheet, int type);
 void spawn_enemy(enemy* enemy_active);
+void spawn_boss(enemy *enemy_active);
 void update_enemy(enemy* enemy_active);
+void shoot_multiple(enemy* enemy_active);
 void draw_enemy(enemy *enemy_active);
 void shoot_enemy(enemy *enemy_active);
 void draw_bullets_enemy(enemy* enemy_active, bullets *bullet);

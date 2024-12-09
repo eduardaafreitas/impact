@@ -3,7 +3,6 @@
 #include "game.h"
 #include "enemy.h"
 
-
 enemy *init_enemy(ALLEGRO_BITMAP* sheet, int type){
 
     enemy *enemy_active;
@@ -26,7 +25,7 @@ enemy *init_enemy(ALLEGRO_BITMAP* sheet, int type){
 }
 
 void spawn_enemy(enemy *enemy_active) {
-    // Define o tipo de inimigo com base no nível atual
+    //Define o tipo de inimigo com base no nível atual
     if (wave_level < 5) {
         enemy_active->type = 1; // Apenas voa
     } else if (wave_level < 10) {
@@ -46,29 +45,45 @@ void spawn_enemy(enemy *enemy_active) {
     enemy_active->pos_y = rand() % (SIZE_Y - al_get_bitmap_height(enemy_active->sprite));
     enemy_active->speed = 2.0 + (wave_level * 0.1); // Aumenta a velocidade com o nível
     enemy_active->health_points = 3 + wave_level / 5; // Aumenta os pontos de vida com o nível
+
+    // enemy_active->pos_y = SIZE_Y - al_get_bitmap_height(enemy_active->sprite); // Posição fixa na parte inferior da tela
+    // enemy_active->speed = 1.0 + (wave_level * 0.1); // Aumenta a velocidade com o nível
+    // enemy_active->health_points = 5 + wave_level / 5; // Aumenta os pontos de vida com o nível
+    
 }
+
+void spawn_boss(enemy *enemy_active) {
+    // Verifica se o Boss ainda não foi spawnado
+    enemy_active->pos_x = SIZE_X;  // Posição inicial na parte direita da tela
+    enemy_active->pos_y = SIZE_Y - al_get_bitmap_height(enemy_active->sprite);  // Posição fixa na parte inferior da tela
+    enemy_active->speed = 0.5 + (wave_level * 0.1);  // Ajusta a velocidade do Boss
+    enemy_active->health_points = 3 + wave_level / 5;  // Define os pontos de vida do Boss
+}
+
 
 void update_enemy(enemy* enemy_active) {
     // Move o inimigo
     enemy_active->pos_x -= enemy_active->speed;
 
-    // Verifica se o inimigo é do tipo que atira (2 ou 4)
-    if (enemy_active->type == 1 || enemy_active->type == 2) {
-        static float shoot_timer = 0;
-        shoot_timer += 1.0 / 60.0; // Incrementa o temporizador baseado em 60 FPS
+    // Verifica se o inimigo deve atirar
+    static float shoot_timer = 0;
+    shoot_timer += 1.0 / 60.0; // Incrementa a cada frame (ajuste para o tempo real do jogo)
 
-        if (shoot_timer >= 1.0) { // Tiros a cada 1 segundo
-            shoot_enemy(enemy_active); // Função para criar um tiro vindo do inimigo
-            shoot_timer = 0; // Reseta o temporizador
-        }
+    if (shoot_timer >= 1.0) { // Tiros a cada 1 segundo, ajuste conforme necessário
+        shoot_enemy(enemy_active);
+        shoot_timer = 0; // Reseta o temporizador
     }
 
-    // Reposiciona o inimigo caso saia da tela
-    if (enemy_active->pos_x + al_get_bitmap_width(enemy_active->sprite) < 0) {
-        spawn_enemy(enemy_active); // Reposiciona o inimigo
+    // if (enemy_active->type == 5){
+    //     spawn_boss(enemy_active);
+    // } && ( enemy_active->type != 5)
+
+    // Se o inimigo sair da tela, reposicionar
+    if ((enemy_active->pos_x + al_get_bitmap_width(enemy_active->sprite) < 0) ) {
+        spawn_enemy(enemy_active);
     }
+
 }
-
 
 
 void draw_enemy(enemy *enemy_active){
@@ -90,21 +105,12 @@ void shoot_enemy(enemy *enemy_active) {
 
 void draw_bullets_enemy(enemy* enemy_active, bullets *bullet) {
     for (int i = 0; i < MAX_BULLETS; i++) {
-        if (enemy_active->bullet[i].active) {
-            // Atualiza a posição do tiro
-            enemy_active->bullet[i].pos_y += enemy_active->bullet[i].speedy;
-
-            // Desenha o tiro
-            al_draw_filled_rectangle(
-                enemy_active->bullet[i].pos_x, enemy_active->bullet[i].pos_y,
-                enemy_active->bullet[i].pos_x + 5, enemy_active->bullet[i].pos_y + 10,
-                al_map_rgb(255, 0, 0)
-            );
-
-            // Desativa o tiro se sair da tela
-            if (enemy_active->bullet[i].pos_y > SIZE_Y) {
-                enemy_active->bullet[i].active = false;
-            }
+        if (enemy_active->bullet->active) {
+            float bullet_start_x = enemy_active->bullet[i].pos_x;
+            float bullet_start_y = enemy_active->bullet[i].pos_y;
+            al_draw_filled_rectangle(bullet_start_x, bullet_start_y - 2, 
+                                     bullet_start_x + 10, bullet_start_y + 3, 
+                                     al_map_rgb(255, 0, 0));
         }
     }
 }

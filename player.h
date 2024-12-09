@@ -35,4 +35,5 @@ void draw_bullets_player(player_ship *player);
 bool check_collision(player_ship *player, bullets *bullet);
 void check_player_collision(player_ship *player, enemy *enemy_active);
 
+
 #endif

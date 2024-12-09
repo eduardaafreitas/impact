@@ -11,26 +11,26 @@
 
 extern int wave_level;
 extern float elapsed_time;
-
 extern unsigned char key[ALLEGRO_KEY_MAX];
 
-enum game_state {start, serving, playing, fase2, end_fase, end_game};
+enum game_state {start, serving, playing, fase2, end_fase, end_game, game_over};
 extern enum game_state state;
 
 void inicia_allegro(bool teste, char *descricao);
-
 void inicializando();
 
 void state_start();
 void state_serving();
-
 void state_playing();
+void state_fase2();
 void state_end_game();
+void state_game_over();
 void state_pause();
 
-void update_wave_level(player_ship* player);
-
 void entry_identifyer(unsigned char *key, player_ship *player);
+
+//gerenciando ondas de inimigos:
+void update_wave_level(player_ship* player);
 void manage_enemy_wave(enemy* enemy_wave, player_ship* player, ALLEGRO_FONT* font);
 
 #endif
