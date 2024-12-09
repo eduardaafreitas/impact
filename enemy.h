@@ -27,6 +27,8 @@ struct enemy{
     int health_points;
     int type;
     bullets *bullet;
+    float shoot_timer;
+    bool can_shoot;
 
 };
 typedef struct enemy enemy;
@@ -38,7 +40,7 @@ void update_enemy(enemy* enemy_active);
 void shoot_multiple(enemy* enemy_active);
 void draw_enemy(enemy *enemy_active);
 void shoot_enemy(enemy *enemy_active);
-void draw_bullets_enemy(enemy* enemy_active, bullets *bullet);
+void draw_bullets_enemy(enemy* enemy_active);
 void update_bullets_enemy(bullets *bullet);
 
 #endif

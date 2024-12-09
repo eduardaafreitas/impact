@@ -346,7 +346,7 @@ void manage_enemy_wave(enemy* enemy_wave, player_ship* player, ALLEGRO_FONT* fon
     // Verificar se o jogador foi atingido por alguma bala dos inimigos
     if (enemy_wave->bullet->active == true) {
         update_bullets_enemy(enemy_wave->bullet);
-        draw_bullets_enemy(enemy_wave, enemy_wave->bullet);
+        draw_bullets_enemy(enemy_wave);
         if (check_collision(player, enemy_wave->bullet)) {
             player->health_points --;
             enemy_wave->bullet->active = false;  // Desativa a bala após o impacto
