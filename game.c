@@ -140,50 +140,15 @@ void state_playing() {
 
                 // Atualiza inimigos com base na onda
                 if (wave_level < 3) {
-                    update_enemy(enemy1);
-                    draw_enemy(enemy1);
-                    if (check_collision(player, enemy1)) {
-                        // Colisão com o inimigo
-                        player->health_points -= 10;  // Diminui vida do jogador
-                        // Pode adicionar mais lógica de colisão aqui (efeitos, sons, etc)
-                    }
-                    update_player(event, player, enemy1);
-                    draw_player(player);
-                    draw_hud(&player, font_text);
+                    manage_enemy_wave(enemy1, player, font_text);
                 } else if (wave_level < 5) {
-                    update_enemy(enemy2);
-                    draw_enemy(enemy2);
-                    if (check_collision(player, enemy2)) {
-                        player->health_points -= 10;
-                    }
-                    update_bullets_enemy(enemy2->bullet);
-                    draw_bullets_enemy(enemy2, enemy2->bullet);
-                    update_player(event, player, enemy2);
-                    draw_player(player);
-                    draw_hud(&player, font_text);
+                    manage_enemy_wave(enemy2, player, font_text);
                 } else if (wave_level < 7) {
-                    update_enemy(enemy3);
-                    draw_enemy(enemy3);
-                    if (check_collision(player, enemy3)) {
-                        player->health_points -= 10;
-                    }
-                    update_bullets_enemy(enemy3->bullet);
-                    draw_bullets_enemy(enemy3, enemy3->bullet);
-                    update_player(event, player, enemy3);
-                    draw_player(player);
-                    draw_hud(&player, font_text);
-                } else if (wave_level > 9){
-                    update_enemy(enemy4);
-                    draw_enemy(enemy4);
-                    if (check_collision(player, enemy4)) {
-                        player->health_points -= 10;
-                    }
-                    update_bullets_enemy(enemy4->bullet);
-                    draw_bullets_enemy(enemy4, enemy4->bullet);
-                    update_player(event, player, enemy4);
-                    draw_player(player);
-                    draw_hud(&player, font_text);
+                    manage_enemy_wave(enemy3, player, font_text);
+                } else if (wave_level > 9) {
+                    manage_enemy_wave(enemy4, player, font_text);
                 }
+
 
                 al_flip_display();
                 // Atualiza a onda
@@ -235,6 +200,15 @@ void state_end_game() {
     // Libera todos os recursos alocados
     al_destroy_bitmap(background);
     al_destroy_bitmap(background2);
+    al_destroy_bitmap(background3);
+    al_destroy_bitmap(sheet_player);
+    al_destroy_bitmap(sheet_enemy1);
+    al_destroy_bitmap(sheet_enemy2);
+    al_destroy_bitmap(sheet_enemy3);
+    al_destroy_bitmap(sheet_enemy4);
+    al_destroy_font(font_title);
+    al_destroy_font(font_text);
+    al_destroy_font(font_text2);
     al_destroy_timer(timer);
     al_destroy_event_queue(queue);
     al_destroy_display(display);
@@ -242,6 +216,7 @@ void state_end_game() {
     printf("Jogo encerrado com sucesso.\n");
     exit(0);  // Encerra o programa
 }
+
 
 void update_wave_level(player_ship* player) {
     // Incrementa o nível da onda a cada 30 segundos
@@ -269,4 +244,19 @@ void entry_identifyer(unsigned char *key, player_ship *player){
         state_pause();
     }
 
+}
+
+void manage_enemy_wave(enemy* enemy_wave, player_ship* player, ALLEGRO_FONT* font) {
+    update_enemy(enemy_wave);
+    draw_enemy(enemy_wave);
+    if (check_collision(player, enemy_wave)) {
+        player->health_points -= 10;
+    }
+    if (enemy_wave->bullet->active == true){
+        update_bullets_enemy(enemy_wave->bullet);
+        draw_bullets_enemy(enemy_wave, enemy_wave->bullet);
+    }
+    update_player(event, player, enemy_wave);
+    draw_player(player);
+    draw_hud(player, font);
 }

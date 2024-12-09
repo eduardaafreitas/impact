@@ -31,5 +31,6 @@ void state_pause();
 void update_wave_level(player_ship* player);
 
 void entry_identifyer(unsigned char *key, player_ship *player);
+void manage_enemy_wave(enemy* enemy_wave, player_ship* player, ALLEGRO_FONT* font);
 
 #endif
