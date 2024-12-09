@@ -11,7 +11,7 @@
 #define FONT_TEXT2_PATH "resources/fonts/SegoeBold.ttf"
 
 void animate_background(ALLEGRO_BITMAP* background, int* background_x, int speed);
-void initial_animation();
+void initial_animation(ALLEGRO_FONT *font_text, ALLEGRO_FONT *font_title);
 void show_hp();
 void draw_hud();
 #endif

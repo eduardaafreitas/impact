@@ -99,10 +99,12 @@ void state_start() {
 
     al_clear_to_color(al_map_rgb(0, 0, 0));
     al_draw_bitmap(background, 0, 0, 0);
+    initial_animation(font_text, font_title);
     al_flip_display();
-
+    
     while (state == start) {
         al_wait_for_event(queue, &event);
+        
 
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             state = end_game;  // Encerrar o jogo
