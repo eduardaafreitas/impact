@@ -34,9 +34,13 @@ void sprites_enemy(ALLEGRO_BITMAP *sheet, enemy *enemy_active, int type) {
             enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 95, 70);
             break;
         case 5:
-        case 10:
             enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 172, 172);
-        
+            break;
+        case 10:
+            enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 300, 292);
+            break;
+            
+
     }
 
     if(enemy_active->sprite == NULL){

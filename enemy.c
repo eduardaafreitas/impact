@@ -16,7 +16,7 @@ enemy *init_enemy(ALLEGRO_BITMAP* sheet, int type){
     enemy_active->health_points = 0;
     enemy_active->type = type;
     enemy_active->shoot_timer = 0.0; // Inicializa o temporizador
-    enemy_active->can_shoot = (type == 2 || type == 3 || type == 4 || type == 5 || type == 6 || type == 7 || type == 8 || type == 9 || type == 10); 
+    enemy_active->can_shoot = (type == 2 || type == 3 || type == 4 || type == 5 || type == 7 || type == 8 || type == 9 || type == 10); 
     sprites_enemy(sheet, enemy_active, type);
     enemy_active->bullet = alloc_bullets(MAX_BULLETS);
     enemy_active->boss = false;
