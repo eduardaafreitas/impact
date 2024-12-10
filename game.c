@@ -147,12 +147,19 @@ void state_playing() {
                 // Atualiza inimigos com base na onda
                 if (wave_level < 3) {
                     manage_enemy_wave(enemy1, player, font_text);
+                    //printf("onda 1 ");
                 } else if (wave_level < 5) {
                     manage_enemy_wave(enemy2, player, font_text);
+                    //printf("onda 2 ");
                 } else if (wave_level < 7) {
                     manage_enemy_wave(enemy3, player, font_text);
-                } else if (wave_level > 9) {
+                    //printf("onda 3 ");
+                } else if (wave_level > 8) {
                     manage_enemy_wave(enemy4, player, font_text);
+                    //printf("onda 4 ");
+                } else {
+                    manage_enemy_wave(boss1, player, font_text);
+                    //printf("onda boss ");
                 }
 
                 al_flip_display();
@@ -329,13 +336,13 @@ void entry_identifyer(unsigned char *key, player_ship *player){
 }
 
 void update_wave_level(player_ship* player) {
-    if (player->enemies_defeated == 2 && player->enemies_defeated > 0) {
+    if (player->enemies_defeated >= 2) {
         wave_level++;
-        player->enemies_defeated = 0; // Reinicia contagem
+        player->enemies_defeated = 0;  // Reinicia contagem
 
-        if (wave_level > 10) { // Supondo que a mudança ocorre após o nível 10
-            state = fase2;
-        }
+        // if (wave_level > 10) {  // Transição para fase 2 após nível 10
+        //     state = fase2;
+        // }
     }
 }
 
