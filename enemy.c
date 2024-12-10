@@ -16,7 +16,7 @@ enemy *init_enemy(ALLEGRO_BITMAP* sheet, int type){
     enemy_active->health_points = 0;
     enemy_active->type = type;
     enemy_active->shoot_timer = 0.0; // Inicializa o temporizador
-    enemy_active->can_shoot = (type == 2 || type == 3); // Apenas certos tipos podem atirar
+    enemy_active->can_shoot = (type == 2 || type == 3 || type == 4 || type == 5); // Apenas certos tipos podem atirar
     sprites_enemy(sheet, enemy_active, type);
     enemy_active->bullet = alloc_bullets(MAX_BULLETS);
     return enemy_active;
@@ -28,8 +28,6 @@ void spawn_enemy(enemy *enemy_active) {
         enemy_active->type = 1;
     }else if (wave_level < 5) {
         enemy_active->type = 2;
-        // enemy_active->bullet->active = true;
-        // shoot_enemy(enemy_active);
     } else if (wave_level < 7) {
         enemy_active->type = 3;
     } else if (wave_level < 8) {
@@ -45,33 +43,25 @@ void spawn_enemy(enemy *enemy_active) {
 }
 
 void spawn_boss(enemy *enemy_active) {
-    if (enemy_active->type == 5) {
-        enemy_active->pos_x = SIZE_X;  // Posição inicial na parte direita da tela
-        enemy_active->pos_y = SIZE_Y - al_get_bitmap_height(enemy_active->sprite);  // Posição fixa na parte inferior da tela
-        enemy_active->speed = 0.5 + (wave_level * 0.1);  // Ajusta a velocidade do Boss
-        enemy_active->health_points = 10 + wave_level / 5;  // Define os pontos de vida do Boss
-    }
+    enemy_active->type = 5;
+    enemy_active->pos_x = SIZE_X;  // Posição inicial na parte direita da tela
+    enemy_active->pos_y = SIZE_Y - al_get_bitmap_height(enemy_active->sprite);  // Posição fixa na parte inferior da tela
+    enemy_active->speed = 0.5 + (wave_level * 0.1);  // Ajusta a velocidade do Boss
+    enemy_active->health_points = 10 + wave_level / 5;  // Define os pontos de vida do Boss
 }
 
 void update_enemy(enemy* enemy_active) {
     // Move o inimigo
     if (enemy_active == NULL) {
-        return; // Se não houver inimigo ativo, não faça nada
+        return;
     }
-    // Verifica se o inimigo é do tipo 5 (Boss)
-    if (enemy_active->type == 5) {
-        // Chama a função para fazer o spawn do Boss
-        spawn_boss(enemy_active);
-    }
-    if (enemy_active->type != 5) {
-        // Lógica para inimigos normais (enemy1, enemy2, etc.)
-        enemy_active->pos_x -= enemy_active->speed;  // Exemplo de movimento para a esquerda
-        if (enemy_active->can_shoot) {
-            enemy_active->shoot_timer += 1.0 / 60.0; // Incrementa o temporizador
-            if (enemy_active->shoot_timer >= 1.0) { // Verifica o intervalo de disparo
-                shoot_enemy(enemy_active);
-                enemy_active->shoot_timer = 0.0; // Reseta o temporizador
-            }
+
+    enemy_active->pos_x -= enemy_active->speed;
+    if (enemy_active->can_shoot) {
+        enemy_active->shoot_timer += 1.0 / 60.0; // Incrementa o temporizador
+        if (enemy_active->shoot_timer >= 1.0) { // Verifica o intervalo de disparo
+            shoot_enemy(enemy_active);
+            enemy_active->shoot_timer = 0.0; // Reseta o temporizador
         }
     }
     if (enemy_active->pos_x < 0 || enemy_active->health_points <= 0) {
