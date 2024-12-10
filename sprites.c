@@ -18,20 +18,25 @@ void sprites_player (ALLEGRO_BITMAP *sheet, player_ship *player){
 void sprites_enemy(ALLEGRO_BITMAP *sheet, enemy *enemy_active, int type) {
     switch (type) {
         case 1:
+        case 6:
             enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 80, 80);
             break;
         case 2:
+        case 7:
             enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 103, 70);
             break;
         case 3:
+        case 8:
             enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 80, 70);
             break;
         case 4:
+        case 9:
             enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 95, 70);
             break;
         case 5:
+        case 10:
             enemy_active->sprite = al_create_sub_bitmap(sheet, 0, 0, 172, 172);
-
+        
     }
 
     if(enemy_active->sprite == NULL){

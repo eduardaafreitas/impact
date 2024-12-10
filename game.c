@@ -191,7 +191,8 @@ void state_playing() {
                     manage_enemy_wave(enemy4, player, font_text);
                 } else if (wave_level < 10){
                     manage_enemy_wave(boss1, player, font_text);
-                } else {
+                } else if(wave_level < 15) {
+                    wave_level = 0;
                     state = fase2;
                 }
                 al_flip_display();
@@ -244,7 +245,7 @@ void state_fase2() {
                 }
 
                 al_flip_display();
-                update_wave_level(player); // Continua atualizando o nível
+                update_wave_level(player);
                 break;
 
             case ALLEGRO_EVENT_KEY_DOWN:
@@ -259,7 +260,6 @@ void state_fase2() {
 }
 
 void state_pause() {
-
     //AJEITAR TELA DE PAUSA
     //al_clear_to_color(al_map_rgb(0, 0, 0));
     al_draw_text(font_title, al_map_rgb(255, 255, 255), SIZE_X / 2, SIZE_Y / 2 - 30,
@@ -276,6 +276,7 @@ void state_pause() {
             break;
         } else if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
             if (event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+                memset(key, 0, sizeof(key));
                 return;  // Sai do estado de pausa e volta ao jogo
             } else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                 state = end_game;  // Encerrar o jogo
@@ -319,14 +320,8 @@ void state_game_over() {
         } else if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
             if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                 state = end_game;
-            } else if (event.keyboard.keycode == ALLEGRO_KEY_R) {
-                restart = true;
-                state = playing;
-            }
+            } 
         } else if (event.type == ALLEGRO_EVENT_TIMER) {
-            // Desenha a tela de Game Over
-            //al_clear_to_color(al_color_name("black"));
-
             al_draw_text(font_title, al_map_rgb(255, 255, 255),
                          al_get_display_width(display) / 2, 
                          al_get_display_height(display) / 3, 
@@ -343,19 +338,12 @@ void state_game_over() {
                          al_get_display_width(display) / 2,
                          (al_get_display_height(display) / 2) + 50,
                          ALLEGRO_ALIGN_CENTER, "Press ESC to Exit");
-            
-            al_draw_text(font_text, al_map_rgb(255, 255, 255),
-                         al_get_display_width(display) / 2,
-                         (al_get_display_height(display) / 2) + 100,
-                         ALLEGRO_ALIGN_CENTER, "Press R to Restart");
-
             al_flip_display();
         }
     }
-
-    // Limpa recursos
     al_destroy_timer(timer);
     al_destroy_event_queue(queue);
+    exit(0);
 }
 
 void entry_identifyer(unsigned char *key, player_ship *player){
@@ -377,10 +365,6 @@ void update_wave_level(player_ship* player) {
     if (player->enemies_defeated >= 2) {
         wave_level++;
         player->enemies_defeated = 0;  // Reinicia contagem
-
-        // if (wave_level > 10) {  // Transição para fase 2 após nível 10
-        //     state = fase2;
-        // }
     }
 }
 
@@ -388,13 +372,19 @@ void manage_enemy_wave(enemy* enemy_wave, player_ship* player, ALLEGRO_FONT* fon
     update_enemy(enemy_wave);
     draw_enemy(enemy_wave);
     
+    update_bullets_enemy(enemy_wave->bullet);
+    draw_bullets_enemy(enemy_wave);
     // Verificar se o jogador foi atingido por alguma bala dos inimigos
-    if (enemy_wave->bullet->active == true) {
-        update_bullets_enemy(enemy_wave->bullet);
-        draw_bullets_enemy(enemy_wave);
-        if (check_collision(player, enemy_wave->bullet)) {
+    for (int i = 0; i < MAX_BULLETS; i++) {
+
+        if (enemy_wave->bullet[i].active && check_collision(player, &enemy_wave->bullet[i])) {
             player->health_points --;
-            enemy_wave->bullet->active = false;  // Desativa a bala após o impacto
+            enemy_wave->bullet[i].active = false;  // Desativa a bala após o impacto
+
+            if (player->health_points == 0) {
+                state = game_over;
+                state_game_over();
+            }
         }
     }
 

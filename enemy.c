@@ -24,26 +24,16 @@ enemy *init_enemy(ALLEGRO_BITMAP* sheet, int type){
 }
 
 void spawn_enemy(enemy *enemy_active, bool boss) {
-    //Define o tipo de inimigo com base no nível atual
-    if (wave_level < 3) {
-        enemy_active->type = 1;
-    }else if (wave_level < 5) {
-        enemy_active->type = 2;
-    } else if (wave_level < 7) {
-        enemy_active->type = 3;
-    } else if (wave_level < 8) {
-        enemy_active->type = 4;
-    }else {
-        enemy_active->type = 5; // Boss 1
-        enemy_active->boss = boss;
-    }
-    // Define posição inicial e configurações gerais
     enemy_active->pos_x = SIZE_X;
-    if (enemy_active->type == 5 || (boss == true)){
+    if (enemy_active->type == 5){
         enemy_active->pos_y = (SIZE_Y - al_get_bitmap_height(enemy_active->sprite));
         enemy_active->speed = 0.5; // Aumenta a velocidade com o nível
         enemy_active->health_points = 10; // Aumenta os pontos de vida com o nível
 
+    } else if(enemy_active->type == 10){
+        enemy_active->pos_y = (0 + al_get_bitmap_height(enemy_active->sprite));
+        enemy_active->speed = 0.5; // Aumenta a velocidade com o nível
+        enemy_active->health_points = 10; // Aumenta os pontos de vida com o nível
     } else {
         enemy_active->pos_y = rand() % (SIZE_Y - al_get_bitmap_height(enemy_active->sprite));
         enemy_active->speed = 2.0 + (wave_level * 0.1); // Aumenta a velocidade com o nível
@@ -59,7 +49,7 @@ void update_enemy(enemy* enemy_active) {
 
     enemy_active->pos_x -= enemy_active->speed;
     if (enemy_active->can_shoot) {
-        enemy_active->shoot_timer += 1.0 / 60.0; // Incrementa o temporizador
+        enemy_active->shoot_timer += 1.0 / 120.0; // Incrementa o temporizador
         if (enemy_active->shoot_timer >= 1.0) { // Verifica o intervalo de disparo
             shoot_enemy(enemy_active);
             enemy_active->shoot_timer = 0.0; // Reseta o temporizador

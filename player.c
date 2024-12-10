@@ -111,6 +111,8 @@ void update_bullets_player(player_ship *player, enemy *enemy_active) {
                 if (enemy_active->health_points <= 0) {
                     spawn_enemy(enemy_active, false);  // Reposiciona o inimigo
                     player->enemies_defeated++;
+                    if (enemy_active->type == 5 || enemy_active->type == 10)
+                        player->enemies_defeated++;
                     player->score += 10;        // Incrementa a pontuação do jogador
                 }
             }
@@ -132,32 +134,6 @@ bool check_collision(player_ship *player, bullets *bullet) {
              player->pos_y + player_height < bullet->pos_y || 
              player->pos_y > bullet->pos_y + bullet_height);
 }
-
-void check_player_collision(player_ship *player, enemy *enemy_active) {
-    if (enemy_active != NULL) {
-        bullets *enemy_bullets = enemy_active->bullet;
-        for (int j = 0; j < MAX_BULLETS; j++) {
-            if (enemy_bullets[j].active) {
-                float bullet_width = 5;
-                float bullet_height = 5;
-                float player_width = al_get_bitmap_width(player->sprites_player[player->atual_pose]);
-                float player_height = al_get_bitmap_height(player->sprites_player[player->atual_pose]);
-
-                // Verifica colisão entre o projétil e o jogador
-                if (collision_detect(enemy_bullets[j].pos_x, enemy_bullets[j].pos_y, bullet_width, bullet_height,
-                                     player->pos_x, player->pos_y, player_width, player_height)) {
-                    player->health_points--;
-                    enemy_bullets[j].active = 0;
-
-                    if (player->health_points == 0) {
-                        state_game_over();
-                    }
-                }
-            }
-        }
-    }
-}
-
 
 void draw_bullets_player(player_ship *player) {
     for (int i = 0; i < MAX_BULLETS; i++) {
