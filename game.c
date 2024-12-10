@@ -17,6 +17,11 @@ ALLEGRO_BITMAP* sheet_enemy2;
 ALLEGRO_BITMAP* sheet_enemy3;
 ALLEGRO_BITMAP* sheet_enemy4;
 ALLEGRO_BITMAP* sheet_boss1;
+ALLEGRO_BITMAP* sheet_enemy6;
+ALLEGRO_BITMAP* sheet_enemy7;
+ALLEGRO_BITMAP* sheet_enemy8;
+ALLEGRO_BITMAP* sheet_enemy9;
+ALLEGRO_BITMAP* sheet_boss2;
 
 int wave_level = 1;          // Começa no nível 1
 float elapsed_time = 0.0;    // Tempo decorrido na fase
@@ -28,6 +33,12 @@ enemy *enemy2;
 enemy *enemy3;
 enemy *enemy4;
 enemy *boss1;
+enemy *enemy6;
+enemy *enemy7;
+enemy *enemy8;
+enemy *enemy9;
+enemy *boss2;
+
 int background_x = 0;  // Posição horizontal do fundo
 const int BACKGROUND_SPEED = 2;  // Velocidade do fundo
 bool restart = false;
@@ -85,13 +96,28 @@ void inicializando(){
     inicia_allegro(sheet_enemy4, "spritesheetEnemy4");
     sheet_boss1 = al_load_bitmap(BOSS1_PATH);
     inicia_allegro(sheet_boss1, "spritesheetboss1");
-  
+    sheet_enemy6 = al_load_bitmap(ENEMY6_PATH);
+    inicia_allegro(sheet_enemy6, "spritesheetEnemy4");
+    sheet_enemy7 = al_load_bitmap(ENEMY7_PATH);
+    inicia_allegro(sheet_enemy7, "spritesheetEnemy4");
+    sheet_enemy8 = al_load_bitmap(ENEMY8_PATH);
+    inicia_allegro(sheet_enemy8, "spritesheetEnemy4");
+    sheet_enemy9 = al_load_bitmap(ENEMY9_PATH);
+    inicia_allegro(sheet_enemy9, "spritesheetEnemy4");
+    sheet_boss2 = al_load_bitmap(BOSS2_PATH);
+    inicia_allegro(sheet_boss2, "spritesheetboss1");
+    
     player = init_player(sheet_player);
     enemy1 = init_enemy(sheet_enemy1, 1);
     enemy2 = init_enemy(sheet_enemy2, 2);
     enemy3 = init_enemy(sheet_enemy3, 3);
     enemy4 = init_enemy(sheet_enemy4, 4);    
     boss1 = init_enemy(sheet_boss1, 5);
+    enemy6 = init_enemy(sheet_enemy6, 6);
+    enemy7 = init_enemy(sheet_enemy7, 7);
+    enemy8 = init_enemy(sheet_enemy8, 8);
+    enemy9 = init_enemy(sheet_enemy9, 9);
+    boss2 = init_enemy(sheet_boss2, 10);
 
 	al_register_event_source(queue, al_get_display_event_source(display));
 	al_register_event_source(queue, al_get_timer_event_source(timer));
@@ -141,29 +167,21 @@ void state_playing() {
             case ALLEGRO_EVENT_TIMER:
                 al_clear_to_color(al_map_rgb(0, 0, 0));
                 animate_background(background3, &background_x, BACKGROUND_SPEED);
-                
                 entry_identifyer(key, player);
-
                 // Atualiza inimigos com base na onda
                 if (wave_level < 3) {
                     manage_enemy_wave(enemy1, player, font_text);
-                    //printf("onda 1 ");
                 } else if (wave_level < 5) {
                     manage_enemy_wave(enemy2, player, font_text);
-                    //printf("onda 2 ");
                 } else if (wave_level < 7) {
                     manage_enemy_wave(enemy3, player, font_text);
-                    //printf("onda 3 ");
                 } else if (wave_level < 9) {
                     manage_enemy_wave(enemy4, player, font_text);
-                    //printf("onda 4 ");
                 } else if (wave_level < 10){
                     manage_enemy_wave(boss1, player, font_text);
-                    printf("onda boss ");
                 } else {
                     state = fase2;
                 }
-
                 al_flip_display();
                 // Atualiza a onda
                 update_wave_level(player);
@@ -199,10 +217,18 @@ void state_fase2() {
                 entry_identifyer(key, player);
 
                 // Aqui, você pode usar inimigos ou lógica diferentes para a Fase 2
-                if (wave_level < 13) {
-                    manage_enemy_wave(enemy3, player, font_text);
+                if (wave_level < 3) {
+                    manage_enemy_wave(enemy6, player, font_text);
+                } else if (wave_level < 5) {
+                    manage_enemy_wave(enemy7, player, font_text);
+                } else if (wave_level < 7) {
+                    manage_enemy_wave(enemy8, player, font_text);
+                } else if (wave_level < 9) {
+                    manage_enemy_wave(enemy9, player, font_text);
+                } else if (wave_level < 10){
+                    manage_enemy_wave(boss2, player, font_text);
                 } else {
-                    manage_enemy_wave(enemy4, player, font_text);
+                    state = end_game;
                 }
 
                 al_flip_display();
@@ -232,7 +258,7 @@ void state_pause() {
                  ALLEGRO_ALIGN_CENTER, "Pressione ESC para sair");
     al_flip_display();
 
-    while (state == playing) {
+    while (state == playing || state == fase2) {
         al_wait_for_event(queue, &event);
 
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {

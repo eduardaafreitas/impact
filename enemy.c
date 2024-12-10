@@ -37,17 +37,16 @@ void spawn_enemy(enemy *enemy_active) {
     }
     // Define posição inicial e configurações gerais
     enemy_active->pos_x = SIZE_X;
-    enemy_active->pos_y = rand() % (SIZE_Y - al_get_bitmap_height(enemy_active->sprite));
-    enemy_active->speed = 2.0 + (wave_level * 0.1); // Aumenta a velocidade com o nível
-    enemy_active->health_points = 3 + wave_level / 5; // Aumenta os pontos de vida com o nível
-}
+    if (enemy_active->type == 5){
+        enemy_active->pos_y = (SIZE_Y - al_get_bitmap_height(enemy_active->sprite));
+        enemy_active->speed = 0.5; // Aumenta a velocidade com o nível
+        enemy_active->health_points = 10; // Aumenta os pontos de vida com o nível
 
-void spawn_boss(enemy *enemy_active) {
-    enemy_active->type = 5;
-    enemy_active->pos_x = SIZE_X;  // Posição inicial na parte direita da tela
-    enemy_active->pos_y = SIZE_Y - al_get_bitmap_height(enemy_active->sprite);  // Posição fixa na parte inferior da tela
-    enemy_active->speed = 0.5 + (wave_level * 0.1);  // Ajusta a velocidade do Boss
-    enemy_active->health_points = 10 + wave_level / 5;  // Define os pontos de vida do Boss
+    } else {
+        enemy_active->pos_y = rand() % (SIZE_Y - al_get_bitmap_height(enemy_active->sprite));
+        enemy_active->speed = 2.0 + (wave_level * 0.1); // Aumenta a velocidade com o nível
+        enemy_active->health_points = 3 + wave_level / 5; // Aumenta os pontos de vida com o nível
+    }
 }
 
 void update_enemy(enemy* enemy_active) {
