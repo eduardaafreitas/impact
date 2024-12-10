@@ -154,12 +154,14 @@ void state_playing() {
                 } else if (wave_level < 7) {
                     manage_enemy_wave(enemy3, player, font_text);
                     //printf("onda 3 ");
-                } else if (wave_level > 8) {
+                } else if (wave_level < 9) {
                     manage_enemy_wave(enemy4, player, font_text);
                     //printf("onda 4 ");
-                } else {
+                } else if (wave_level < 10){
                     manage_enemy_wave(boss1, player, font_text);
-                    //printf("onda boss ");
+                    printf("onda boss ");
+                } else {
+                    state = fase2;
                 }
 
                 al_flip_display();

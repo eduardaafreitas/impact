@@ -4,27 +4,21 @@
 #include "enemy.h"
 
 enemy *init_enemy(ALLEGRO_BITMAP* sheet, int type){
-
     enemy *enemy_active;
     enemy_active = malloc(sizeof(enemy));
     if (enemy_active == NULL){
         printf("Erro ao alocar memoria (enemy_active)\n");
         exit(1);
     }
-
     enemy_active->pos_x = SIZE_X;
     enemy_active->pos_y = SIZE_Y;
     enemy_active->speed = 5.0;
     enemy_active->health_points = 0;
     enemy_active->type = type;
-
     enemy_active->shoot_timer = 0.0; // Inicializa o temporizador
     enemy_active->can_shoot = (type == 2 || type == 3); // Apenas certos tipos podem atirar
-
-
     sprites_enemy(sheet, enemy_active, type);
     enemy_active->bullet = alloc_bullets(MAX_BULLETS);
-
     return enemy_active;
 }
 
@@ -43,17 +37,11 @@ void spawn_enemy(enemy *enemy_active) {
     }else {
         enemy_active->type = 5; // Boss 1
     }
-
     // Define posição inicial e configurações gerais
     enemy_active->pos_x = SIZE_X;
     enemy_active->pos_y = rand() % (SIZE_Y - al_get_bitmap_height(enemy_active->sprite));
     enemy_active->speed = 2.0 + (wave_level * 0.1); // Aumenta a velocidade com o nível
     enemy_active->health_points = 3 + wave_level / 5; // Aumenta os pontos de vida com o nível
-
-    // enemy_active->pos_y = SIZE_Y - al_get_bitmap_height(enemy_active->sprite); // Posição fixa na parte inferior da tela
-    // enemy_active->speed = 1.0 + (wave_level * 0.1); // Aumenta a velocidade com o nível
-    // enemy_active->health_points = 5 + wave_level / 5; // Aumenta os pontos de vida com o nível
-    
 }
 
 void spawn_boss(enemy *enemy_active) {
@@ -65,20 +53,16 @@ void spawn_boss(enemy *enemy_active) {
     }
 }
 
-
 void update_enemy(enemy* enemy_active) {
     // Move o inimigo
-
     if (enemy_active == NULL) {
         return; // Se não houver inimigo ativo, não faça nada
     }
-
     // Verifica se o inimigo é do tipo 5 (Boss)
     if (enemy_active->type == 5) {
         // Chama a função para fazer o spawn do Boss
         spawn_boss(enemy_active);
     }
-
     if (enemy_active->type != 5) {
         // Lógica para inimigos normais (enemy1, enemy2, etc.)
         enemy_active->pos_x -= enemy_active->speed;  // Exemplo de movimento para a esquerda
@@ -90,11 +74,9 @@ void update_enemy(enemy* enemy_active) {
             }
         }
     }
-
     if (enemy_active->pos_x < 0 || enemy_active->health_points <= 0) {
         spawn_enemy(enemy_active);
     }
-
 }
 
 void draw_enemy(enemy *enemy_active){
