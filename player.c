@@ -109,7 +109,7 @@ void update_bullets_player(player_ship *player, enemy *enemy_active) {
 
                 // Se o inimigo for derrotado, reposicione-o ou aplique lógica adicional
                 if (enemy_active->health_points <= 0) {
-                    spawn_enemy(enemy_active);  // Reposiciona o inimigo
+                    spawn_enemy(enemy_active, false);  // Reposiciona o inimigo
                     player->enemies_defeated++;
                     player->score += 10;        // Incrementa a pontuação do jogador
                 }

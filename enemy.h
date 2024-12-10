@@ -34,12 +34,13 @@ struct enemy{
     bullets *bullet;
     float shoot_timer;
     bool can_shoot;
+    bool boss;
 
 };
 typedef struct enemy enemy;
 
 enemy *init_enemy(ALLEGRO_BITMAP* sheet, int type);
-void spawn_enemy(enemy* enemy_active);
+void spawn_enemy(enemy* enemy_active, bool boss);
 void spawn_boss(enemy *enemy_active);
 void update_enemy(enemy* enemy_active);
 void shoot_multiple(enemy* enemy_active);

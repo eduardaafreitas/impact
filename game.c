@@ -42,6 +42,8 @@ enemy *boss2;
 int background_x = 0;  // Posição horizontal do fundo
 const int BACKGROUND_SPEED = 2;  // Velocidade do fundo
 bool restart = false;
+
+
 //-------------------------------------------------------------
 void inicia_allegro(bool teste, char *descricao){
     if(teste) 
@@ -128,20 +130,29 @@ void inicializando(){
 void state_start() {
     al_init_primitives_addon();   
     inicializando();
-
     al_clear_to_color(al_map_rgb(0, 0, 0));
     al_draw_bitmap(background, 0, 0, 0);
+    
     initial_animation(font_text, font_title);
     al_flip_display();
     
     while (state == start) {
         al_wait_for_event(queue, &event);
         
-
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             state = end_game;  // Encerrar o jogo
 
-        } else if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+        }  else if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+
+            if (event.keyboard.keycode == ALLEGRO_KEY_TAB){
+                al_clear_to_color(al_map_rgb(0, 0, 0));
+                al_draw_bitmap(background, 0, 0, 0);
+                al_draw_text(font_text, al_map_rgb(255, 255, 255), 20, 177,
+                            ALLEGRO_ALIGN_LEFT, "Muito tempo atrás, em uma galáxia muito, muito distante...");
+                initial_text(font_text);
+                al_flip_display();
+            }
+            
             if (event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
                 state = playing;  // Avançar para o próximo estado
 
@@ -155,6 +166,7 @@ void state_start() {
 void state_playing() {
     background_x = 0;
     memset(key, 0, sizeof(key));
+    float y_position = SIZE_Y; // Começa fora da tela
 
     while (state == playing) {
         al_wait_for_event(queue, &event);
@@ -228,7 +240,7 @@ void state_fase2() {
                 } else if (wave_level < 10){
                     manage_enemy_wave(boss2, player, font_text);
                 } else {
-                    state = end_game;
+                    state = game_over;
                 }
 
                 al_flip_display();
@@ -252,8 +264,6 @@ void state_pause() {
     //al_clear_to_color(al_map_rgb(0, 0, 0));
     al_draw_text(font_title, al_map_rgb(255, 255, 255), SIZE_X / 2, SIZE_Y / 2 - 30,
                  ALLEGRO_ALIGN_CENTER, "Jogo Pausado");
-    al_draw_text(font_text, al_map_rgb(255, 255, 255), SIZE_X / 2, SIZE_Y / 2 + 10,
-                 ALLEGRO_ALIGN_CENTER, "Pressione ENTER para continuar");
     al_draw_text(font_text, al_map_rgb(255, 255, 255), SIZE_X / 2, SIZE_Y / 2 + 40,
                  ALLEGRO_ALIGN_CENTER, "Pressione ESC para sair");
     al_flip_display();
